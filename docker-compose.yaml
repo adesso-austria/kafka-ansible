@@ -25,13 +25,4 @@ services:
       - "322:22"
     deploy: # swarm only
       replicas: 2
-  ansible:
-    image: adesso/ansible
-    build:
-      context: .
-    entrypoint: tail -f /dev/null
-    ports:
-      - "422:22"
-    volumes:
-      - ./playbooks:/opt/apb/actions
     
