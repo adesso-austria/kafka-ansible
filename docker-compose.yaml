@@ -4,7 +4,7 @@ services:
   kafka:
     image: adesso/debian
     build:
-      context: dockerfiles/openSuse
+      context: dockerfiles/debian
     ports:
       - "122:22"
     deploy: # swarm only
@@ -12,7 +12,7 @@ services:
   zookeeper:
     image: adesso/debian
     build:
-      context: dockerfiles/openSuse
+      context: dockerfiles/debian
     ports:
       - "222:22"
     deploy: # swarm only
@@ -20,7 +20,7 @@ services:
   schema-registry:
     image: adesso/debian
     build:
-      context: dockerfiles/openSuse
+      context: dockerfiles/debian
     ports:
       - "322:22"
     deploy: # swarm only
