@@ -2,28 +2,25 @@ version: '3.3'
 
 services:
   kafka:
-    image: adesso/opensuse
+    image: adesso/debian
     build:
       context: dockerfiles/openSuse
-    entrypoint: tail -f /var/log/lastlog
     ports:
       - "122:22"
     deploy: # swarm only
       replicas: 3
   zookeeper:
-    image: adesso/opensuse
+    image: adesso/debian
     build:
       context: dockerfiles/openSuse
-    entrypoint: tail -f /var/log/lastlog
     ports:
       - "222:22"
     deploy: # swarm only
       replicas: 3
   schema-registry:
-    image: adesso/opensuse
+    image: adesso/debian
     build:
       context: dockerfiles/openSuse
-    entrypoint: tail -f /var/log/lastlog
     ports:
       - "322:22"
     deploy: # swarm only
