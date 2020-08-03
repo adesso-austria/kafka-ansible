@@ -1,6 +1,8 @@
 - name: Start zookeeper
-  systemd:
-    name: zookeeper
-    state: started
-    daemon_reload: yes
-    enabled: yes
+  command: '{{ installation_dir }}/bin/zkServer.sh start {{ config_dir }}/zoo.cfg'
+
+#  systemd:
+#    name: zookeeper
+#    state: started
+#    daemon_reload: yes
+#    enabled: yes
