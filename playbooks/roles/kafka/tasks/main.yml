@@ -1,0 +1,145 @@
+- name: Ensure group "kafka" exists
+  group:
+    name: '{{ kafka_group }}'
+    state: present
+
+- name: Create "kafka" service user
+  user:
+    name: '{{ kafka_user }}'
+    group: '{{ kafka_group }}'
+    create_home: false
+    shell: /sbin/nologin
+    state: present
+
+- name: Check if Kafka has already been downloaded and unpacked
+  stat:
+    path: '{{ kafka_dir }}_{{ kafka_scala_version }}-{{ kafka_version }}'
+  register: dir
+
+- name: Download Apache Kafka {{ kafka_version }}
+  get_url:
+    url: http://www-eu.apache.org/dist/kafka/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz
+    dest: /tmp
+  when: not dir.stat.exists
+
+- name: Extract Apache Kafka
+  unarchive:
+    src: /tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz
+    dest: '{{ kafka_root_dir }}'
+    copy: no
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  when: not dir.stat.exists
+
+- name: Symlink kafka installation directory
+  file:
+    src: '{{ kafka_root_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}'
+    dest: '{{ kafka_dir }}'
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Create directory for kafka log files
+  file:
+    path: '{{ kafka_log_dirs }}'
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Create directory for symlink to kafka configuration files
+  file:
+    path: /etc/kafka
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Create configuration server.properties
+  template:
+    src: server.properties.j2
+    dest: '{{ kafka_dir }}/config/server.properties'
+  notify:
+    - Restart kafka service
+
+- name: Create configuration zookeeper.properties
+  template:
+    src: zookeeper.properties.j2
+    dest: '{{ kafka_dir }}/config/zookeeper.properties'
+
+- name: Create configuration connect-standalone.properties
+  template:
+    src: connect-standalone.properties.j2
+    dest: '{{ kafka_dir }}/config/connect-standalone.properties'
+
+- name: Create configuration connect-distributed.properties
+  template:
+    src: connect-distributed.properties.j2
+    dest: '{{ kafka_dir }}/config/connect-distributed.properties'
+
+- name: Create configuration producer.properties
+  template:
+    src: producer.properties.j2
+    dest: '{{ kafka_dir }}/config/producer.properties'
+
+- name: Create configuration consumer.properties
+  template:
+    src: consumer.properties.j2
+    dest: '{{ kafka_dir }}/config/consumer.properties'
+
+- name: Symlink kafka server properties
+  file:
+    src: '{{ kafka_dir }}/config/server.properties'
+    dest: /etc/kafka/server.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Symlink kafka connect standalone properties
+  file:
+    src: '{{ kafka_dir }}/config/connect-standalone.properties'
+    dest: /etc/kafka/connect-standalone.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Symlink kafka connect distributed properties
+  file:
+    src: '{{ kafka_dir }}/config/connect-distributed.properties'
+    dest: /etc/kafka/connect-distributed.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Symlink kafka producer properties
+  file:
+    src: '{{ kafka_dir }}/config/producer.properties'
+    dest: /etc/kafka/producer.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Symlink kafka consumer properties
+  file:
+    src: '{{ kafka_dir }}/config/consumer.properties'
+    dest: /etc/kafka/consumer.properties
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Create kafka service file
+  template:
+    src: kafka.service.j2
+    dest: /etc/systemd/kafka.service
+  notify:
+    #- Restart kafka service
+    - Start kafka
+
+# - name: Install and start the kafka service
+#   service:
+#     name: kafka
+#     state: started
+#     enabled: yes
+
+- name: Cleanup Apache Kafka archive
+  file:
+    path: /tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz
+    state: absent

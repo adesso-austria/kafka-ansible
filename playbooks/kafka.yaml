@@ -1,6 +1,0 @@
-- name: kafka provision
-  host: kafka
-  gather_facts: true
-  connection: local
-  roles:
-    - role: kafka-apb
