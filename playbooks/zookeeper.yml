@@ -2,6 +2,78 @@
   hosts: zookeeper
   gather_facts: true
   become: true
+
+  vars:
+    version: "3.6.1"
+    tar_filename: "apache-zookeeper-{{ version }}-bin.tar.gz"
+    installation_dir: "/opt/apache-zookeeper"
+    data_dir: "/mnt/zookeeper/data"
+    config_dir: "/mnt/zookeeper/conf"
+
   roles:
     - role: common/java
 
+  tasks:
+    - name: Ensure group "zookeeper" exists
+      group:
+        name: zookeeper
+        state: present
+
+    - name: Create "zookeeper" service user
+      user:
+        name: zookeeper
+        group: zookeeper
+        create_home: false
+        shell: /bin/bash
+        state: present
+
+    - name: Download Apache Zookeeper {{ version }}
+      get_url:
+        url: https://archive.apache.org/dist/zookeeper/zookeeper-{{ version }}/{{ tar_filename }}
+        dest: /opt
+
+    - name: Make sure destination dir exists
+      file:
+        path: '{{ installation_dir }}'
+        state: directory
+        recurse: yes
+
+    - name: Extract the downloaded file
+      unarchive:
+        src: /opt/{{ tar_filename }}
+        dest: '{{ installation_dir }}'
+        extra_opts: [--strip-components=1]
+        remote_src: true
+
+    - name: Recursively change ownership of zookeeper installation directory
+      file:
+        path: '{{ installation_dir }}'
+        state: directory
+        owner: zookeeper
+        group: zookeeper
+        recurse: true
+
+    - name: Create config directory if it does not exist
+      file:
+        path: '{{ config_dir }}'
+        state: directory
+        owner: zookeeper
+        group: zookeeper
+        mode: '0755'
+
+    - name: Create data directory if it does not exist
+      file:
+        path: '{{ data_dir }}'
+        state: directory
+        owner: zookeeper
+        group: zookeeper
+        mode: '0755'
+
+    - name: Create config if it does not exist
+      copy:
+        src: '{{ installation_dir }}/conf/zoo_sample.cfg'
+        dest: '{{ config_dir }}/zoo.cfg'
+        remote_src: true
+        force: false
+        owner: zookeeper
+        group: zookeeper
