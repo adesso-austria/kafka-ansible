@@ -1,0 +1,15 @@
+- name: Import the official AdoptOpenJDK GPG key
+  apt_key:
+    url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+    #validate_certs: false
+    state: present
+
+- name: Import the AdoptOpenJDK DEB repository
+  apt_repository:
+    repo: deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ buster main
+    state: present
+
+- name: Install AdoptOpenJDK 11 package
+  apt:
+    name: adoptopenjdk-11-hotspot
+    state: present
