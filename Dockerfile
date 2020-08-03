@@ -17,4 +17,7 @@ RUN chmod -R 600 /root/.ssh
 # Inventory
 ADD hosts /etc/ansible/hosts
 
+# Playbooks
+ADD playbooks /opt/playbooks
+
 CMD ["ansible", "all", "-m", "ping"]
