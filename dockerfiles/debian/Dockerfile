@@ -3,7 +3,7 @@ MAINTAINER Michael Vlasaty
 
 # ssh-server
 RUN apt-get update
-RUN apt-get install -qy openssh-server python
+RUN apt-get install -qy openssh-server python sudo
 RUN mkdir /var/run/sshd
 RUN echo 'root:toor2020' | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -16,5 +16,7 @@ RUN echo 'manager:test123' | chpasswd
 RUN mkdir -p /home/manager/.ssh
 ADD rsa_key.pub /home/manager/.ssh/rsa_key.pub
 RUN cat /home/manager/.ssh/rsa_key.pub >> /home/manager/.ssh/authorized_keys
+# configure sudo
+RUN echo "manager ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/manager && chmod 0440 /etc/sudoers.d/manager
 
 CMD ["/usr/sbin/sshd", "-D"]
