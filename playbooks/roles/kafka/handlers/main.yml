@@ -3,6 +3,3 @@
     name: kafka
     state: restarted
     daemon_reload: yes
-
-- name: Start kafka
-  command: '{{ kafka_dir }}/bin/kafka-server-start.sh /etc/kafka/server.properties'

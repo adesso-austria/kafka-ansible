@@ -1,4 +1,4 @@
-kafka_version: 2.3.0
+kafka_version: 2.5.0
 kafka_scala_version: 2.12
 
 kafka_user: kafka
@@ -69,7 +69,7 @@ kafka_log_segment_bytes: 1073741824
 kafka_log_retention_check_interval_ms: 300000
 
 # Enable auto creation of topic on the server
-kafka_auto_create_topics_enable: false
+kafka_auto_create_topics_enable: true
 
 # Enables delete topic. Delete topic through the admin tool will have no
 # effect if this config is turned off

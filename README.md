@@ -12,3 +12,6 @@ DEMO SHOWCASE - Apache Kafka setup with Ansible
 * `docker run --rm --network kafka-ansible_default adesso/ansible ansible-playbook /opt/playbooks/zookeeper.yml`
 * `docker exec -ti ID /bin/bash`
 * `ps aux | grep zookeeper`
+
+## Install Kafka
+* `docker run --rm --network kafka-ansible_default adesso/ansible ansible-playbook /opt/playbooks/kafka.yml`
