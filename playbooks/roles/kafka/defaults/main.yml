@@ -87,7 +87,7 @@ kafka_group_initial_rebalance_delay_ms: 0
 # server. e.g. "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002".
 # You can also append an optional chroot string to the urls to specify the
 # root directory for all kafka znodes.
-kafka_zookeeper_connect: "zookeeper:2181"
+kafka_zookeeper_connect: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
 
 # Timeout in ms for connecting to zookeeper
 kafka_zookeeper_connection_timeout_ms: 6000
@@ -101,7 +101,7 @@ kafka_zookeeper_max_client_cnxns: 0
 
 # Kafka Connect config
 
-kafka_connect_bootstrap_servers: "kafka:9092"
+kafka_connect_bootstrap_servers: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
 kafka_connect_group_id: connect-cluster
 kafka_connect_key_converter: org.apache.kafka.connect.json.JsonConverter
 kafka_connect_value_converter: org.apache.kafka.connect.json.JsonConverter
@@ -121,10 +121,10 @@ kafka_connect_offset_storage_file_filename: /tmp/connect.offsets
 
 # Producer config
 
-kafka_producer_bootstrap_servers: "kafka:9092"
+kafka_producer_bootstrap_servers: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
 kafka_producer_compression_type: none
 
 # Consumer config
 
 kafka_consumer_group_id: kafka-consumer-group
-kafka_consumer_bootstrap_servers: "kafka:9092"
+kafka_consumer_bootstrap_servers: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
