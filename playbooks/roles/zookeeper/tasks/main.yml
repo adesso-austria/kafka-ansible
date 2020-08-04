@@ -53,12 +53,10 @@
     group: '{{ group }}'
     mode: '0755'
 
-- name: Create config if it does not exist
-  copy:
-    src: '{{ installation_dir }}/conf/zoo_sample.cfg'
+- name: Create configuration zoo.cfg
+  template:
+    src: zoo.cfg.j2
     dest: '{{ config_dir }}/zoo.cfg'
-    remote_src: true
-    force: false
     owner: '{{ user }}'
     group: '{{ group }}'
 
@@ -69,8 +67,8 @@
     line: dataDir={{ data_dir }}
 
 - name: Copy systemd service file to server
-  copy:
-    src: zookeeper.service
+  template:
+    src: zookeeper.service.j2
     dest: /etc/systemd/system
     owner: root
     group: root
