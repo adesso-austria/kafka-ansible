@@ -1,5 +1,5 @@
 - name: Start zookeeper
-  command: '{{ installation_dir }}/bin/zkServer.sh start {{ config_dir }}/zoo.cfg'
+  command: '{{ zookeeper_dir }}/bin/zkServer.sh start {{ zookeeper_config_dir }}/zoo.cfg'
 
 #  systemd:
 #    name: zookeeper

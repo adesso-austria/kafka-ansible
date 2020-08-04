@@ -1,83 +1,80 @@
 - name: Ensure group "zookeeper" exists
   group:
-    name: '{{ group }}'
+    name: '{{ zookeeper_group }}'
     state: present
 
 - name: Create "zookeeper" service user
   user:
-    name: '{{ user }}'
-    group: '{{ group }}'
+    name: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
     create_home: false
     shell: /sbin/nologin
     state: present
 
-- name: Download Apache Zookeeper {{ version }}
+- name: Download Apache Zookeeper {{ zookeeper_version }}
   get_url:
-    url: '{{ binary_url }}'
-    dest: /opt
+    url: 'https://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz'
+    dest: /tmp
 
 - name: Make sure destination dir exists
   file:
-    path: '{{ installation_dir }}'
+    path: '{{ zookeeper_dir }}'
     state: directory
     recurse: yes
 
 - name: Extract the downloaded file
   unarchive:
-    src: /opt/{{ tar_filename }}
-    dest: '{{ installation_dir }}'
+    src: /tmp/apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz
+    dest: '{{ zookeeper_dir }}'
     extra_opts: [--strip-components=1]
     remote_src: true
 
 - name: Recursively change ownership of zookeeper installation directory
   file:
-    path: '{{ installation_dir }}'
+    path: '{{ zookeeper_dir }}'
     state: directory
-    owner: '{{ user }}'
-    group: '{{ group }}'
+    owner: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
     recurse: true
 
 - name: Create config directory if it does not exist
   file:
-    path: '{{ config_dir }}'
+    path: '{{ zookeeper_config_dir }}'
     state: directory
-    owner: '{{ user }}'
-    group: '{{ group }}'
+    owner: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
     mode: '0755'
 
 - name: Create data directory if it does not exist
   file:
-    path: '{{ data_dir }}'
+    path: '{{ zookeeper_data_dir }}'
     state: directory
-    owner: '{{ user }}'
-    group: '{{ group }}'
+    owner: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
     mode: '0755'
 
 - name: Create configuration zoo.cfg
   template:
     src: zoo.cfg.j2
-    dest: '{{ config_dir }}/zoo.cfg'
-    owner: '{{ user }}'
-    group: '{{ group }}'
-
-- name: Configure data directory
-  lineinfile:
-    path: '{{ config_dir }}/zoo.cfg'
-    regexp: '^dataDir='
-    line: dataDir={{ data_dir }}
+    dest: '{{ zookeeper_config_dir }}/zoo.cfg'
+    owner: '{{ zookeeper_user }}'
+    group: '{{ zookeeper_group }}'
 
 - name: Create configuration myid
   template:
     src: myid.j2
-    dest: '{{ data_dir }}/myid'
+    dest: '{{ zookeeper_data_dir }}/myid'
     owner: root
     group: root
 
 - name: Copy systemd service file to server
   template:
     src: zookeeper.service.j2
-    dest: /etc/systemd/system
+    dest: /etc/systemd/system/zookeeper.service
     owner: root
     group: root
-  notify:
-    - Start zookeeper
+#  notify:
+#    - Start zookeeper
+
+- name: Start zookeeper
+  shell: 'nohup {{ zookeeper_dir }}/bin/zkServer.sh start {{ zookeeper_config_dir }}/zoo.cfg &'
