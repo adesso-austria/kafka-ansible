@@ -1,3 +1,17 @@
-kafka             ansible_connection=ssh        ansible_user=manager
-zookeeper         ansible_connection=ssh        ansible_user=manager
-schema-registry   ansible_connection=ssh        ansible_user=manager
+kafka-1             ansible_connection=ssh        ansible_user=manager  kafka_broker_id=0 kafka_listener_hostname=kafka-1
+kafka-2             ansible_connection=ssh        ansible_user=manager  kafka_broker_id=1 kafka_listener_hostname=kafka-2
+kafka-3             ansible_connection=ssh        ansible_user=manager  kafka_broker_id=2 kafka_listener_hostname=kafka-3
+zookeeper-1         ansible_connection=ssh        ansible_user=manager  zookeeper_hostname=zookeeper-1  zookeeper_id=1
+zookeeper-2         ansible_connection=ssh        ansible_user=manager  zookeeper_hostname=zookeeper-2  zookeeper_id=2
+zookeeper-3         ansible_connection=ssh        ansible_user=manager  zookeeper_hostname=zookeeper-3  zookeeper_id=3
+schema-registry     ansible_connection=ssh        ansible_user=manager
+
+[kafka-cluster]
+kafka-1
+kafka-2
+kafka-3
+
+[zookeeper-ensemble]
+zookeeper-1
+zookeeper-2
+zookeeper-3

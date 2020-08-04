@@ -66,6 +66,13 @@
     regexp: '^dataDir='
     line: dataDir={{ data_dir }}
 
+- name: Create configuration myid
+  template:
+    src: myid.j2
+    dest: '{{ data_dir }}/myid'
+    owner: root
+    group: root
+
 - name: Copy systemd service file to server
   template:
     src: zookeeper.service.j2

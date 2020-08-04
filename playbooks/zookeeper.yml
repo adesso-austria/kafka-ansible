@@ -1,5 +1,5 @@
 - name: zookepper provision
-  hosts: zookeeper
+  hosts: zookeeper-ensemble
   gather_facts: true
   become: true
 

@@ -1,8 +1,0 @@
-version: '3.6.1'
-binary_url: 'https://archive.apache.org/dist/zookeeper/zookeeper-{{ version }}/{{ tar_filename }}'
-tar_filename: 'apache-zookeeper-{{ version }}-bin.tar.gz'
-installation_dir: '/opt/zookeeper'
-data_dir: '/mnt/zookeeper/data'
-config_dir: '/mnt/zookeeper/conf'
-user: 'zookeeper'
-group: 'zookeeper'

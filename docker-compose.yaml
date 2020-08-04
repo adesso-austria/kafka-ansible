@@ -1,29 +1,46 @@
 version: '3.3'
 
 services:
-  kafka:
+  kafka-1:
     image: adesso/debian
     build:
       context: dockerfiles/debian
-    ports:
-      - "122:22"
-    privileged: true
-    deploy: # swarm only
-      replicas: 3
-  zookeeper:
+    # ports:
+    #   - "122:22"
+  kafka-2:
     image: adesso/debian
     build:
       context: dockerfiles/debian
-    ports:
-      - "222:22"
-    deploy: # swarm only
-      replicas: 3
-  schema-registry:
+    # ports:
+    #   - "122:22"
+  kafka-3:
     image: adesso/debian
     build:
       context: dockerfiles/debian
-    ports:
-      - "322:22"
-    deploy: # swarm only
-      replicas: 2
+    # ports:
+    #   - "122:22"
+  zookeeper-1:
+    image: adesso/debian
+    build:
+      context: dockerfiles/debian
+    # ports:
+    #   - "222:22"
+  zookeeper-2:
+    image: adesso/debian
+    build:
+      context: dockerfiles/debian
+    # ports:
+    #   - "222:22"
+  zookeeper-3:
+    image: adesso/debian
+    build:
+      context: dockerfiles/debian
+    # ports:
+    #   - "222:22"
+  # schema-registry:
+  #   image: adesso/debian
+  #   build:
+  #     context: dockerfiles/debian
+    # ports:
+    #   - "322:22"
     
